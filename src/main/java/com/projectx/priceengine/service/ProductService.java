@@ -45,25 +45,28 @@ public class ProductService {
    */
   private void populateProductSummary(final Product product, final ProductSummary productSummary) {
     try {
-      double pricePerUnit = product.getPricePerCarton() / product.getNumberOfProductsPerCarton();
-      double totalPrice = product.getSelectedQuantity() * pricePerUnit;
+      if (product.getSelectedQuantity() > 0) {
+        double pricePerUnit = product.getPricePerCarton() / product.getNumberOfProductsPerCarton();
+        double totalPrice = product.getSelectedQuantity() * pricePerUnit;
 
-      int numberOfCartons = product.getSelectedQuantity() / product.getNumberOfProductsPerCarton();
+        int numberOfCartons =
+            product.getSelectedQuantity() / product.getNumberOfProductsPerCarton();
 
-      if (numberOfCartons > 0) {
-        productSummary.setDeliveryType("Home Delivery");
-        if (numberOfCartons > 3) {
-          totalPrice = totalPrice - (totalPrice * 10) / 100;
+        if (numberOfCartons > 0) {
+          productSummary.setDeliveryType("Home Delivery");
+          if (numberOfCartons > 3) {
+            totalPrice = totalPrice - (totalPrice * 10) / 100;
+          }
+        } else {
+          productSummary.setDeliveryType("Manual Pick");
+          totalPrice = totalPrice + (totalPrice * 30) / 100;
         }
-      } else {
-        productSummary.setDeliveryType("Manual Pick");
-        totalPrice = totalPrice + (totalPrice * 30) / 100;
-      }
-      // add total price for each product in summary
-      double finalTotalPrice =
-          Double.parseDouble(numberFormat.format(productSummary.getTotalPrice() + totalPrice));
+        // add total price for each product in summary
+        double finalTotalPrice =
+            Double.parseDouble(numberFormat.format(productSummary.getTotalPrice() + totalPrice));
 
-      productSummary.setTotalPrice(finalTotalPrice);
+        productSummary.setTotalPrice(finalTotalPrice);
+      }
 
     } catch (ArithmeticException ae) {
       log.error("Exception in ProductService while getting the product summary", ae);

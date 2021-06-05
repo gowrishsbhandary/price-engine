@@ -1,0 +1,6 @@
+productId,productName,quantityAvailable,pricePerCarton,numberOfProductsPerCarton
+1001,Apple,500,175,20
+1002,Orange,100,825,5
+1002,Grape,250,150,12
+1002,Mango,70,330,7
+1002,Strawberry,0,50,15
